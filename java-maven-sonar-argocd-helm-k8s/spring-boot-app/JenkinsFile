@@ -83,6 +83,29 @@ pipeline {
             }
        }
     }
+     stage('Deploy to EKS') {
+      environment {
+        AWS_DEFAULT_REGION = 'ap-south-1' // Change to your AWS region
+        KUBECONFIG = 'C:\\Users\\masth\\.kube\\config' // Path to your kubeconfig file if needed
+      }
+      steps {
+        withCredentials([string(credentialsId: 'aws-credentials-id', variable: 'AWS_ACCESS_KEY_ID'),
+                         string(credentialsId: 'aws-credentials-secret-id', variable: 'AWS_SECRET_ACCESS_KEY')]) {
+          sh '''
+            # Configure AWS CLI
+            aws configure set aws_access_key_id $AWS_ACCESS_KEY_ID
+            aws configure set aws_secret_access_key $AWS_SECRET_ACCESS_KEY
+            aws configure set region $AWS_DEFAULT_REGION
+            
+            # Update kubeconfig for EKS
+            aws eks update-kubeconfig --region $AWS_DEFAULT_REGION --name utlimatecicd
+            
+            # Apply the deployment file to EKS
+            kubectl apply -f java-maven-sonar-argocd-helm-k8s/spring-boot-app-manifests/deployment.yml
+          '''
+        }
+      }
+    }
   stage('Cleanup') {
       steps {
           cleanWs()
