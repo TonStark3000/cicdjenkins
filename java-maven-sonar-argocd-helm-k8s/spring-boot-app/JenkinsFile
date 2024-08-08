@@ -5,6 +5,19 @@ pipeline {
       args '--user root -v /var/run/docker.sock:/var/run/docker.sock' // mount Docker socket to access the host's Docker daemon
     }
   }
+stages {
+    stage('Install AWS CLI') {
+      steps {
+        sh '''
+          apt-get update
+          apt-get install -y unzip \
+          && curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip" \
+          && unzip awscliv2.zip \
+          && sudo ./aws/install \
+          && rm -rf awscliv2.zip aws/
+        '''
+      }
+    }
   stages {
     stage('Checkout') {
       steps {
