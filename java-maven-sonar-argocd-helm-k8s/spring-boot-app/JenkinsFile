@@ -49,6 +49,7 @@ pipeline {
         environment {
             GIT_REPO_NAME = "cicdjenkins"
             GIT_USER_NAME = "TonStark3000"
+            GIT_BRANCH = "main" 
         }
         steps {
             withCredentials([string(credentialsId: 'github', variable: 'GITHUB_TOKEN')]) {
