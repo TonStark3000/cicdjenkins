@@ -5,8 +5,8 @@ pipeline {
       args '--user root -v /var/run/docker.sock:/var/run/docker.sock' // mount Docker socket to access the host's Docker daemon
     }
   }
-stages {
-    stage('Install AWS CLI') {
+  stages {
+     stage('Install AWS CLI') {
       steps {
         sh '''
           apt-get update
@@ -17,8 +17,7 @@ stages {
           && rm -rf awscliv2.zip aws/
         '''
       }
-    }
-  stages {
+}
     stage('Checkout') {
       steps {
         sh 'echo passed'
